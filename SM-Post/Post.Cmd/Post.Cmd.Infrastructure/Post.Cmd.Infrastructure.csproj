@@ -16,6 +16,7 @@
     <PackageReference Include="Confluent.Kafka" Version="1.9.3" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.18.0" />
+    <PackageReference Include="Scrutor" Version="4.2.0" />
   </ItemGroup>
 
 </Project>
