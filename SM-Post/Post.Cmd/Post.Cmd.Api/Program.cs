@@ -1,6 +1,8 @@
+using Confluent.Kafka;
 using CQRS.Core.Domain;
 using CQRS.Core.Handlers;
 using CQRS.Core.Infrastructure;
+using CQRS.Core.Producers;
 using Post.Cmd.Api.Commands;
 using Post.Cmd.Domain.Aggregates;
 using Post.Cmd.Infrastructure.Configs;
@@ -10,6 +12,7 @@ using Post.Cmd.Infrastructure.Repositories;
 using Post.Cmd.Infrastructure.Stores;
 using Microsoft.Extensions.DependencyInjection;
 using Post.Cmd.Api;
+using Post.Cmd.Infrastructure.Producers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,10 +24,12 @@ services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
 services.Configure<MongoDbConfig>(builder.Configuration.GetSection($"{nameof(MongoDbConfig)}"));
+services.Configure<ProducerConfig>(builder.Configuration.GetSection($"{nameof(ProducerConfig)}"));
 services.AddScoped<IEventStoreRepository, EventStoreRepository>();
 services.AddScoped<IEventStore, EventStore>();
 services.AddScoped<IEventSourcingHandler<PostAggregate>, EventSourcingHandler>();
 services.AddScoped<ICommandHandler, CommandHandler>();
+services.AddScoped<IEventProducer, EventProducer>();
 
 // Register command handler methods
 services.AddCommands();
