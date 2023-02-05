@@ -1,5 +1,8 @@
+using Confluent.Kafka;
+using CQRS.Core.Consumers;
 using Microsoft.EntityFrameworkCore;
 using Post.Query.Domain.Repositories;
+using Post.Query.Infrastructure.Consumers;
 using Post.Query.Infrastructure.DataAccess;
 using Post.Query.Infrastructure.Handlers;
 using Post.Query.Infrastructure.Repositories;
@@ -22,6 +25,9 @@ dataContext.Database.EnsureCreated();
 services.AddScoped<IPostRepository, PostRepository>();
 services.AddScoped<ICommentRepository, CommentRepository>();
 services.AddScoped<IEventHandler, EventHandler>();
+services.Configure<ConsumerConfig>(builder.Configuration.GetSection(nameof(ConsumerConfig)));
+services.AddScoped<IEventConsumer, EventConsumer>();
+services.AddHostedService<ConsumerHostedService>();
 
 services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
