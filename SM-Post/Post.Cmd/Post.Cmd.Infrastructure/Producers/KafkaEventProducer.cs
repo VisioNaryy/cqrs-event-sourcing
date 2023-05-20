@@ -6,11 +6,11 @@ using Microsoft.Extensions.Options;
 
 namespace Post.Cmd.Infrastructure.Producers;
 
-public class EventProducer : IEventProducer
+public class KafkaEventProducer : IEventProducer
 {
     private readonly ProducerConfig _config;
 
-    public EventProducer(IOptions<ProducerConfig> config)
+    public KafkaEventProducer(IOptions<ProducerConfig> config)
     {
         _config = config.Value;
     }

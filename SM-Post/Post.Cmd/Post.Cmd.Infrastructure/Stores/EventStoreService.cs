@@ -7,12 +7,12 @@ using Post.Cmd.Domain.Aggregates;
 
 namespace Post.Cmd.Infrastructure.Stores;
 
-public class EventStore : IEventStore
+public class EventStoreService : IEventStoreService
 {
     private readonly IEventStoreRepository _eventStoreRepository;
     private readonly IEventProducer _eventProducer;
 
-    public EventStore(IEventStoreRepository eventStoreRepository, IEventProducer eventProducer)
+    public EventStoreService(IEventStoreRepository eventStoreRepository, IEventProducer eventProducer)
     {
         _eventStoreRepository = eventStoreRepository;
         _eventProducer = eventProducer;
@@ -43,7 +43,7 @@ public class EventStore : IEventStore
             @event.Version = version;
             
             var eventType = @event.GetType().Name;
-            var eventModel = new EventModel()
+            var eventModel = new EventModel
             {
                 TimeStamp = DateTime.UtcNow,
                 AggregateIdentifier = aggregateId,

@@ -1,5 +1,4 @@
-﻿using CQRS.Core.Commands;
-using CQRS.Core.Events;
+﻿using CQRS.Core.Events;
 
 namespace CQRS.Core.Domain;
 
@@ -23,7 +22,7 @@ public abstract class AggregateRoot
     private void ApplyChanges(BaseEvent @event, bool isNew)
     {
         // We will get a type of a concrete Aggregate Root
-        var method = this.GetType().GetMethod("Apply", new Type[] {@event.GetType()});
+        var method = GetType().GetMethod("Apply", new [] {@event.GetType()});
 
         if (method is null)
             throw new ArgumentNullException(nameof(method),
@@ -31,7 +30,7 @@ public abstract class AggregateRoot
 
         method.Invoke(this, new object?[] {@event});
 
-        if (isNew is true)
+        if (isNew)
             _changes.Add(@event);
     }
 

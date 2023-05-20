@@ -1,4 +1,7 @@
 ﻿using CQRS.Core.Handlers;
+using Post.Cmd.Api.Commands.Comments;
+using Post.Cmd.Api.Commands.Messages;
+using Post.Cmd.Api.Commands.Posts;
 using Post.Cmd.Domain.Aggregates;
 
 namespace Post.Cmd.Api.Commands;

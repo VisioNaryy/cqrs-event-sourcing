@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using CQRS.Core.Domain;
+﻿using CQRS.Core.Domain;
 using Post.Common.Events;
 
 namespace Post.Cmd.Domain.Aggregates;

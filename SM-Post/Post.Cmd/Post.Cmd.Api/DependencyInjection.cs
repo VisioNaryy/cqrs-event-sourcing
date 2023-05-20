@@ -2,6 +2,9 @@
 using CQRS.Core.Commands;
 using CQRS.Core.Infrastructure;
 using Post.Cmd.Api.Commands;
+using Post.Cmd.Api.Commands.Comments;
+using Post.Cmd.Api.Commands.Messages;
+using Post.Cmd.Api.Commands.Posts;
 using Post.Cmd.Infrastructure.Dispatchers;
 
 namespace Post.Cmd.Api;

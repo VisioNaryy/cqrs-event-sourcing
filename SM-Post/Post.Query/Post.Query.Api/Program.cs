@@ -26,7 +26,7 @@ services.AddScoped<IPostRepository, PostRepository>();
 services.AddScoped<ICommentRepository, CommentRepository>();
 services.AddScoped<IEventHandler, EventHandler>();
 services.Configure<ConsumerConfig>(builder.Configuration.GetSection(nameof(ConsumerConfig)));
-services.AddScoped<IEventConsumer, EventConsumer>();
+services.AddScoped<IEventConsumer, KafkaEventConsumer>();
 services.AddHostedService<ConsumerHostedService>();
 
 services.AddControllers();

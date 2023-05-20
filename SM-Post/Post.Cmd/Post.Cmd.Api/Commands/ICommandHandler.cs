@@ -1,4 +1,8 @@
-﻿namespace Post.Cmd.Api.Commands;
+﻿using Post.Cmd.Api.Commands.Comments;
+using Post.Cmd.Api.Commands.Messages;
+using Post.Cmd.Api.Commands.Posts;
+
+namespace Post.Cmd.Api.Commands;
 
 public interface ICommandHandler
 {

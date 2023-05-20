@@ -26,10 +26,10 @@ services.AddSwaggerGen();
 services.Configure<MongoDbConfig>(builder.Configuration.GetSection($"{nameof(MongoDbConfig)}"));
 services.Configure<ProducerConfig>(builder.Configuration.GetSection($"{nameof(ProducerConfig)}"));
 services.AddScoped<IEventStoreRepository, EventStoreRepository>();
-services.AddScoped<IEventStore, EventStore>();
+services.AddScoped<IEventStoreService, EventStoreService>();
 services.AddScoped<IEventSourcingHandler<PostAggregate>, EventSourcingHandler>();
 services.AddScoped<ICommandHandler, CommandHandler>();
-services.AddScoped<IEventProducer, EventProducer>();
+services.AddScoped<IEventProducer, KafkaEventProducer>();
 
 // Register command handler methods
 services.AddCommands();

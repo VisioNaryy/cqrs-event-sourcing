@@ -7,16 +7,16 @@ namespace Post.Cmd.Infrastructure.Handlers;
 
 public class EventSourcingHandler : IEventSourcingHandler<PostAggregate>
 {
-    private readonly IEventStore _eventStore;
+    private readonly IEventStoreService _eventStoreService;
 
-    public EventSourcingHandler(IEventStore eventStore)
+    public EventSourcingHandler(IEventStoreService eventStoreService)
     {
-        _eventStore = eventStore;
+        _eventStoreService = eventStoreService;
     }
     
     public async Task SaveAsync(AggregateRoot aggregate)
     {
-        await _eventStore.SaveEventsAsync(aggregate.Id, aggregate.GetUncommittedChanges(), aggregate.Version);
+        await _eventStoreService.SaveEventsAsync(aggregate.Id, aggregate.GetUncommittedChanges(), aggregate.Version);
         
         aggregate.MarkChangesAsCommitted();
     }
@@ -24,7 +24,7 @@ public class EventSourcingHandler : IEventSourcingHandler<PostAggregate>
     public async Task<PostAggregate> GetByIdAsync(Guid aggregateId)
     {
         var aggregate = new PostAggregate();
-        var events = await _eventStore.GetEventsAsync(aggregateId);
+        var events = await _eventStoreService.GetEventsAsync(aggregateId);
 
         if (events is null || !events.Any())
             return aggregate;

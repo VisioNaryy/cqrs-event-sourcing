@@ -8,12 +8,12 @@ using Post.Query.Infrastructure.Handlers;
 
 namespace Post.Query.Infrastructure.Consumers;
 
-public class EventConsumer : IEventConsumer
+public class KafkaEventConsumer : IEventConsumer
 {
     private readonly IEventHandler _eventHandler;
     private readonly ConsumerConfig _config;
 
-    public EventConsumer(IOptions<ConsumerConfig> config, IEventHandler eventHandler)
+    public KafkaEventConsumer(IOptions<ConsumerConfig> config, IEventHandler eventHandler)
     {
         _eventHandler = eventHandler;
         _config = config.Value;
@@ -37,7 +37,7 @@ public class EventConsumer : IEventConsumer
 
             var options = new JsonSerializerOptions {Converters = { new EventJsonConverter() }};
             var @event = JsonSerializer.Deserialize<BaseEvent>(consumerResult.Message.Value, options);
-            var handlerMethod = _eventHandler.GetType().GetMethod("On", new Type[] {@event.GetType()});
+            var handlerMethod = _eventHandler.GetType().GetMethod("On", new [] {@event.GetType()});
 
             if (handlerMethod is null)
                 throw new ArgumentNullException(nameof(handlerMethod), "Could not find event handler method!");
