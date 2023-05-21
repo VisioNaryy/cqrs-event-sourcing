@@ -37,7 +37,7 @@ services.AddSwaggerGen();
 
 services.Configure<MongoDbConfig>(builder.Configuration.GetSection($"{nameof(MongoDbConfig)}"));
 services.Configure<ProducerConfig>(builder.Configuration.GetSection($"{nameof(ProducerConfig)}"));
-services.AddScoped<IMongoEventStoreRepository, MongoMongoEventStoreRepository>();
+services.AddScoped<IMongoEventStoreRepository, MongoEventStoreRepository>();
 services.AddScoped<IEventStoreService, EventStoreService>();
 services.AddScoped<IEventSourcingHandler<PostAggregate>, EventSourcingHandler>();
 services.AddScoped<ICommandHandler, CommandHandler>();
