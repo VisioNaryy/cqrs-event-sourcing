@@ -1,4 +1,5 @@
-﻿using CQRS.Core.Infrastructure;
+﻿using CQRS.Core.Exceptions;
+using CQRS.Core.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Post.Cmd.Api.Commands.Posts;
 using Post.Cmd.Api.DTOs;
@@ -25,37 +26,15 @@ public class NewPostController : ControllerBase
     public async Task<ActionResult> NewPostAsync(NewPostCommand command)
     {
         var id = Guid.NewGuid();
-        
-        try
-        {
-            command.Id = id;
-        
-            await _commandDispatcher.SendAsync(command);
 
-            return StatusCode(StatusCodes.Status201Created, new NewPostResponse
-            {
-                Message = "New post created successfully",
-                Id = id
-            });
-        }
-        catch (InvalidOperationException exception)
-        {
-            _logger.LogError(exception, "Client made a bad request");
+        command.Id = id;
 
-            return BadRequest(new BaseResponse
-            {
-                Message = exception.Message
-            });
-        }
-        catch (Exception exception)
-        {
-            _logger.LogError(exception, "Error creating new post");
+        await _commandDispatcher.SendAsync(command);
 
-            return StatusCode(StatusCodes.Status500InternalServerError, new NewPostResponse
-            {
-                Message = "Error creating new post",
-                Id = id
-            });
-        }
+        return StatusCode(StatusCodes.Status201Created, new NewPostResponse
+        {
+            Message = "New post created successfully",
+            Id = id
+        });
     }
 }

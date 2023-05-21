@@ -24,42 +24,12 @@ public class AddCommentController: ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult> AddCommentAsync(Guid id, AddCommentCommand command)
     {
-        try
-        {
-            command.Id = id;
-            await _commandDispatcher.SendAsync(command);
+        command.Id = id;
+        await _commandDispatcher.SendAsync(command);
 
-            return Ok(new BaseResponse
-            {
-                Message = "Comment added successfully"
-            });
-        }
-        catch (InvalidOperationException exception)
+        return Ok(new BaseResponse
         {
-            _logger.LogError(exception, "Client made a bad request");
-
-            return BadRequest(new BaseResponse
-            {
-                Message = exception.Message
-            });
-        }
-        catch (AggregateNotFoundException exception)
-        {
-            _logger.LogError(exception, "Could not find an aggregate, client passed an invalid id");
-
-            return BadRequest(new BaseResponse
-            {
-                Message = exception.Message
-            });
-        }
-        catch (Exception exception)
-        {
-            _logger.LogError(exception, "Error adding a comment to a post");
-
-            return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
-            {
-                Message = "Error adding a comment to a post"
-            });
-        }
+            Message = "Comment added successfully"
+        });
     }
 }

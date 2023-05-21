@@ -24,41 +24,11 @@ public class LikePostController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult> LikePostAsync(Guid id)
     {
-        try
-        {
-            await _commandDispatcher.SendAsync(new LikePostCommand {Id = id});
+        await _commandDispatcher.SendAsync(new LikePostCommand {Id = id});
 
-            return Ok(new BaseResponse
-            {
-                Message = "Post liked successfully"
-            });
-        }
-        catch (InvalidOperationException exception)
+        return Ok(new BaseResponse
         {
-            _logger.LogError(exception, "Client made a bad request");
-
-            return BadRequest(new BaseResponse
-            {
-                Message = exception.Message
-            });
-        }
-        catch (AggregateNotFoundException exception)
-        {
-            _logger.LogError(exception, "Could not find an aggregate, client passed an invalid id");
-
-            return BadRequest(new BaseResponse
-            {
-                Message = exception.Message
-            });
-        }
-        catch (Exception exception)
-        {
-            _logger.LogError(exception, "Error liking a post");
-
-            return StatusCode(StatusCodes.Status500InternalServerError, new BaseResponse
-            {
-                Message = "Error liking a post"
-            });
-        }
+            Message = "Post liked successfully"
+        });
     }
 }

@@ -14,6 +14,7 @@ using Post.Cmd.Infrastructure.Stores;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization;
 using Post.Cmd.Api;
+using Post.Cmd.Api.Middleware;
 using Post.Cmd.Infrastructure.Producers;
 using Post.Common.Events;
 
@@ -35,6 +36,7 @@ services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
+services.AddScoped<ExceptionMiddleware>();
 services.Configure<MongoDbConfig>(builder.Configuration.GetSection($"{nameof(MongoDbConfig)}"));
 services.Configure<ProducerConfig>(builder.Configuration.GetSection($"{nameof(ProducerConfig)}"));
 services.AddScoped<IMongoEventStoreRepository, MongoEventStoreRepository>();
@@ -56,6 +58,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthorization();
 
