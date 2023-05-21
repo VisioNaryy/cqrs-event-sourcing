@@ -9,18 +9,18 @@ namespace Post.Cmd.Infrastructure.Stores;
 
 public class EventStoreService : IEventStoreService
 {
-    private readonly IEventStoreRepository _eventStoreRepository;
-    private readonly IEventProducer _eventProducer;
+    private readonly IMongoEventStoreRepository _mongoEventStoreRepository;
+    private readonly IKafkaEventProducer _kafkaEventProducer;
 
-    public EventStoreService(IEventStoreRepository eventStoreRepository, IEventProducer eventProducer)
+    public EventStoreService(IMongoEventStoreRepository mongoEventStoreRepository, IKafkaEventProducer kafkaEventProducer)
     {
-        _eventStoreRepository = eventStoreRepository;
-        _eventProducer = eventProducer;
+        _mongoEventStoreRepository = mongoEventStoreRepository;
+        _kafkaEventProducer = kafkaEventProducer;
     }
 
     public async Task<List<BaseEvent>> GetEventsAsync(Guid aggregateId)
     {
-        var eventStream = await _eventStoreRepository.FindByAggregateId(aggregateId);
+        var eventStream = await _mongoEventStoreRepository.FindByAggregateId(aggregateId);
 
         if (eventStream is null || !eventStream.Any())
             throw new AggregateNotFoundException("Incorrect post Id provided!");
@@ -30,7 +30,7 @@ public class EventStoreService : IEventStoreService
     
     public async Task SaveEventsAsync(Guid aggregateId, IEnumerable<BaseEvent> events, int expectedVersion)
     {
-        var eventStream = await _eventStoreRepository.FindByAggregateId(aggregateId);
+        var eventStream = await _mongoEventStoreRepository.FindByAggregateId(aggregateId);
 
         if (expectedVersion != -1 && eventStream[^1].Version != expectedVersion)
             throw new ConcurrencyException();
@@ -53,10 +53,10 @@ public class EventStoreService : IEventStoreService
                 EventData = @event
             };
 
-            await _eventStoreRepository.SaveAsync(eventModel);
+            await _mongoEventStoreRepository.SaveAsync(eventModel);
 
             var topic = Environment.GetEnvironmentVariable("KAFKA_TOPIC");
-            await _eventProducer.ProduceAsync(topic, @event);
+            await _kafkaEventProducer.ProduceAsync(topic, @event);
         }
     }
 }

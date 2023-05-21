@@ -2,7 +2,7 @@
 
 namespace CQRS.Core.Domain;
 
-public interface IEventStoreRepository
+public interface IMongoEventStoreRepository
 {
     Task SaveAsync(EventModel @event);
 

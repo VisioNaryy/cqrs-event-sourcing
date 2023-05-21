@@ -2,7 +2,7 @@
 
 namespace CQRS.Core.Producers;
 
-public interface IEventProducer
+public interface IKafkaEventProducer
 {
     Task ProduceAsync<T>(string? topic, T @event) where T: BaseEvent;
 }

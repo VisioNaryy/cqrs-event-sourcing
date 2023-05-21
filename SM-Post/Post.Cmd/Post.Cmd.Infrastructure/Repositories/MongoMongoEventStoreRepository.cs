@@ -6,11 +6,11 @@ using Post.Cmd.Infrastructure.Configs;
 
 namespace Post.Cmd.Infrastructure.Repositories;
 
-public class EventStoreRepository : IEventStoreRepository
+public class MongoMongoEventStoreRepository : IMongoEventStoreRepository
 {
     private readonly IMongoCollection<EventModel> _eventStoreCollection;
 
-    public EventStoreRepository(IOptions<MongoDbConfig> config)
+    public MongoMongoEventStoreRepository(IOptions<MongoDbConfig> config)
     {
         var mongoClient = new MongoClient(config.Value.ConnectionString);
         var mongoDatabase = mongoClient.GetDatabase(config.Value.Database);
