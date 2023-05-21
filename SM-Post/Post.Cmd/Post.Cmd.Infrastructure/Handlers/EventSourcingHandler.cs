@@ -29,6 +29,7 @@ public class EventSourcingHandler : IEventSourcingHandler<PostAggregate>
         if (events is null || !events.Any())
             return aggregate;
 
+        aggregate.ReplayEvents(events);
         var latestVersion = events.Select(x => x.Version).Max();
         aggregate.Version = latestVersion;
 

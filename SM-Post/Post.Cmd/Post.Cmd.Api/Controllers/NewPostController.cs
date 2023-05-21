@@ -1,5 +1,4 @@
-﻿using System.Net;
-using CQRS.Core.Infrastructure;
+﻿using CQRS.Core.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Post.Cmd.Api.Commands.Posts;
 using Post.Cmd.Api.DTOs;

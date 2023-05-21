@@ -33,7 +33,6 @@ public class PostAggregate : AggregateRoot
         });
     }
     
-    
     public void Apply(PostCreatedEvent @event)
     {
         _id = @event.Id;
