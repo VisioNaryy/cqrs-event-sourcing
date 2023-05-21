@@ -19,7 +19,7 @@ public class EventJsonConverter : JsonConverter<BaseEvent>
             throw new JsonException($"Failed to parse {nameof(JsonDocument)}!");
         }
 
-        if (document.RootElement.TryGetProperty("Type", out var type))
+        if (!document.RootElement.TryGetProperty("Type", out var type))
         {
             throw new JsonException("Could not take the Type discriminator property!");
         }
@@ -39,8 +39,6 @@ public class EventJsonConverter : JsonConverter<BaseEvent>
             
             _ => throw new JsonException($"{typeDiscriminator} is not supported yet!")
         };
-        
-        
     }
 
     public override void Write(Utf8JsonWriter writer, BaseEvent value, JsonSerializerOptions options)
