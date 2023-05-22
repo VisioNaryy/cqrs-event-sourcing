@@ -1,5 +1,4 @@
-﻿using CQRS.Core.Exceptions;
-using CQRS.Core.Infrastructure;
+﻿using CQRS.Core.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Post.Cmd.Api.Commands.Comments;
 using Post.Common.DTOs;

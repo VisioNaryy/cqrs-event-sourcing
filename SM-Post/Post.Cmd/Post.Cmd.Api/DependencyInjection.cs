@@ -1,8 +1,7 @@
-﻿using System.Reflection;
-using CQRS.Core.Commands;
-using CQRS.Core.Infrastructure;
+﻿using CQRS.Core.Infrastructure;
 using Post.Cmd.Api.Commands;
 using Post.Cmd.Api.Commands.Comments;
+using Post.Cmd.Api.Commands.Db;
 using Post.Cmd.Api.Commands.Messages;
 using Post.Cmd.Api.Commands.Posts;
 using Post.Cmd.Infrastructure.Dispatchers;
@@ -26,6 +25,7 @@ public static class DependencyInjection
         dispatcher.RegisterHandler<LikePostCommand>(commandHandler.HandleAsync);
         dispatcher.RegisterHandler<NewPostCommand>(commandHandler.HandleAsync);
         dispatcher.RegisterHandler<RemoveCommentCommand>(commandHandler.HandleAsync);
+        dispatcher.RegisterHandler<RestoreReadDbCommand>(commandHandler.HandleAsync);
         services.AddSingleton<ICommandDispatcher>(_ => dispatcher);
 
         return services;

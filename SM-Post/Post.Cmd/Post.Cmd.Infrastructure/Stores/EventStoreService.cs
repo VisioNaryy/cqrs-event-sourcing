@@ -27,7 +27,17 @@ public class EventStoreService : IEventStoreService
 
         return eventStream.OrderBy(x => x.Version).Select(x => x.EventData).ToList();
     }
-    
+
+    public async Task<List<Guid>> GetAggregateIdsAsync()
+    {
+        var eventStream = await _mongoEventStoreRepository.FindAll();
+
+        if (eventStream is null || !eventStream.Any())
+            throw new AggregateNotFoundException("No posts found!");
+
+        return eventStream.Select(x => x.AggregateIdentifier).Distinct().ToList();
+    }
+
     public async Task SaveEventsAsync(Guid aggregateId, IEnumerable<BaseEvent> events, int expectedVersion)
     {
         var eventStream = await _mongoEventStoreRepository.FindByAggregateId(aggregateId);

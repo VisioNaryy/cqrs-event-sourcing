@@ -1,4 +1,5 @@
 ﻿using Post.Cmd.Api.Commands.Comments;
+using Post.Cmd.Api.Commands.Db;
 using Post.Cmd.Api.Commands.Messages;
 using Post.Cmd.Api.Commands.Posts;
 
@@ -13,4 +14,5 @@ public interface ICommandHandler
     Task HandleAsync(LikePostCommand command);
     Task HandleAsync(NewPostCommand command);
     Task HandleAsync(RemoveCommentCommand command);
+    Task HandleAsync(RestoreReadDbCommand command);
 }

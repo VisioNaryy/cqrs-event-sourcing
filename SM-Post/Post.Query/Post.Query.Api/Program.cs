@@ -1,4 +1,3 @@
-using System.Net;
 using Confluent.Kafka;
 using CQRS.Core.Consumers;
 using Microsoft.EntityFrameworkCore;

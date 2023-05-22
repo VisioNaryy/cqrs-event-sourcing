@@ -1,5 +1,6 @@
 ﻿using CQRS.Core.Handlers;
 using Post.Cmd.Api.Commands.Comments;
+using Post.Cmd.Api.Commands.Db;
 using Post.Cmd.Api.Commands.Messages;
 using Post.Cmd.Api.Commands.Posts;
 using Post.Cmd.Domain.Aggregates;
@@ -68,5 +69,10 @@ public class CommandHandler : ICommandHandler
         aggregate.RemoveComment(command.CommentId, command.Username);
         
         await _eventSourcingHandler.SaveAsync(aggregate);
+    }
+
+    public async Task HandleAsync(RestoreReadDbCommand command)
+    {
+        await _eventSourcingHandler.RepublishEventsAsync();
     }
 }

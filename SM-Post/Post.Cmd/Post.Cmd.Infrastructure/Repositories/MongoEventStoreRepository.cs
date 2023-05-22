@@ -23,6 +23,13 @@ public class MongoEventStoreRepository : IMongoEventStoreRepository
             await _eventStoreCollection.Find(x => x.AggregateIdentifier == aggregateId).ToListAsync()
                 .ConfigureAwait(false);
 
+    public async Task<List<EventModel>> FindAll()
+    {
+        var eventStream = await _eventStoreCollection.FindAsync(x => true).ConfigureAwait(false);
+
+        return await eventStream.ToListAsync().ConfigureAwait(false);
+    }
+
 
     public async Task SaveAsync(EventModel @event)
         =>
