@@ -19,6 +19,9 @@ using Post.Cmd.Infrastructure.Producers;
 using Post.Common.Events;
 
 var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
+
+builder.Configuration.AddUserSecrets<Program>();
 
 BsonClassMap.RegisterClassMap<BaseEvent>();
 BsonClassMap.RegisterClassMap<PostCreatedEvent>();
@@ -29,9 +32,6 @@ BsonClassMap.RegisterClassMap<CommentAddedEvent>();
 BsonClassMap.RegisterClassMap<CommentUpdatedEvent>();
 BsonClassMap.RegisterClassMap<CommentRemovedEvent>();
 
-// Add services to the container.
-
-var services = builder.Services;
 services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
@@ -42,22 +42,19 @@ services.Configure<ProducerConfig>(builder.Configuration.GetSection($"{nameof(Pr
 services.AddScoped<IMongoEventStoreRepository, MongoEventStoreRepository>();
 services.AddScoped<IEventStoreService, EventStoreService>();
 services.AddScoped<IEventSourcingHandler<PostAggregate>, EventSourcingHandler>();
-services.AddScoped<ICommandHandler, CommandHandler>();
 services.AddScoped<IKafkaEventProducer, KafkaKafkaEventProducer>();
 
 // Register command handler methods
 services.AddCommands();
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseMiddleware<ExceptionMiddleware>();
 

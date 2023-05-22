@@ -52,7 +52,7 @@ public class ExceptionMiddleware : IMiddleware
             var json = JsonSerializer.Serialize(new 
             {
                 ErrorCode = errorCode,
-                Message = "Error processing a request"
+                ex.Message
             });
 
             await context.Response.WriteAsync(json);

@@ -1,6 +1,9 @@
+using System.Net;
 using Confluent.Kafka;
 using CQRS.Core.Consumers;
 using Microsoft.EntityFrameworkCore;
+using Post.Query.Api;
+using Post.Query.Api.Middleware;
 using Post.Query.Domain.Repositories;
 using Post.Query.Infrastructure.Consumers;
 using Post.Query.Infrastructure.DataAccess;
@@ -10,7 +13,8 @@ using EventHandler = Post.Query.Infrastructure.Handlers.EventHandler;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Configuration.AddUserSecrets<Program>();
+
 var services = builder.Services;
 
 Action<DbContextOptionsBuilder> configureDbContext =
@@ -18,10 +22,10 @@ Action<DbContextOptionsBuilder> configureDbContext =
 services.AddDbContext<DatabaseContext>(configureDbContext);
 services.AddSingleton(new DatabaseContextFactory(configureDbContext));
 
-//Create database and tables from code
 var dataContext = services.BuildServiceProvider().GetRequiredService<DatabaseContext>();
 dataContext.Database.EnsureCreated();
 
+services.AddScoped<ExceptionMiddleware>();
 services.AddScoped<IPostRepository, PostRepository>();
 services.AddScoped<ICommentRepository, CommentRepository>();
 services.AddScoped<IEventHandler, EventHandler>();
@@ -29,21 +33,23 @@ services.Configure<ConsumerConfig>(builder.Configuration.GetSection(nameof(Consu
 services.AddScoped<IEventConsumer, KafkaEventConsumer>();
 services.AddHostedService<ConsumerHostedService>();
 
+services.AddQueries();
+
 services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthorization();
 

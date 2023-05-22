@@ -1,4 +1,5 @@
-﻿using Post.Common.Events;
+﻿using Microsoft.Extensions.Logging;
+using Post.Common.Events;
 using Post.Query.Domain.Entities;
 using Post.Query.Domain.Repositories;
 
@@ -8,17 +9,22 @@ public class EventHandler : IEventHandler
 {
     private readonly IPostRepository _postRepository;
     private readonly ICommentRepository _commentRepository;
+    private readonly ILogger<EventHandler> _logger;
 
     public EventHandler(
         IPostRepository postRepository,
-        ICommentRepository commentRepository)
+        ICommentRepository commentRepository,
+        ILogger<EventHandler> logger)
     {
         _postRepository = postRepository;
         _commentRepository = commentRepository;
+        _logger = logger;
     }
 
     public async Task On(PostCreatedEvent @event)
     {
+        _logger.LogInformation("Handling event {Event}", @event.GetType().Name);
+        
         var post = new PostEntity
         {
             PostId = @event.Id,
@@ -28,6 +34,8 @@ public class EventHandler : IEventHandler
         };
 
         await _postRepository.CreateAsync(post);
+        
+        _logger.LogInformation("Event {Event} handled successfully", @event.GetType().Name);
     }
 
     public async Task On(PostLikedEvent @event)

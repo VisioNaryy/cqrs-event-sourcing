@@ -13,6 +13,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddCommands(this IServiceCollection services)
     {
+        services.AddScoped<ICommandHandler, CommandHandler>();
+        
         var commandHandler = services.BuildServiceProvider().GetRequiredService<ICommandHandler>();
 
         var dispatcher = new CommandDispatcher();

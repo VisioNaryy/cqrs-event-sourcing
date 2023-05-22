@@ -2,6 +2,7 @@
 using Confluent.Kafka;
 using CQRS.Core.Consumers;
 using CQRS.Core.Events;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Post.Query.Infrastructure.Converters;
 using Post.Query.Infrastructure.Handlers;
@@ -11,11 +12,16 @@ namespace Post.Query.Infrastructure.Consumers;
 public class KafkaEventConsumer : IEventConsumer
 {
     private readonly IEventHandler _eventHandler;
+    private readonly ILogger<KafkaEventConsumer> _logger;
     private readonly ConsumerConfig _config;
 
-    public KafkaEventConsumer(IOptions<ConsumerConfig> config, IEventHandler eventHandler)
+    public KafkaEventConsumer(
+        IOptions<ConsumerConfig> config, 
+        IEventHandler eventHandler,
+        ILogger<KafkaEventConsumer> logger)
     {
         _eventHandler = eventHandler;
+        _logger = logger;
         _config = config.Value;
     }
 
@@ -32,6 +38,8 @@ public class KafkaEventConsumer : IEventConsumer
         {
             var consumerResult = consumer.Consume();
             
+            _logger.LogInformation("Consuming message from topic {Topic}", topic);
+            
             if (consumerResult?.Message is null)
                 continue;
 
@@ -44,6 +52,8 @@ public class KafkaEventConsumer : IEventConsumer
 
             handlerMethod.Invoke(_eventHandler, new object?[] {@event});
             consumer.Commit(consumerResult);
+            
+            _logger.LogInformation("Message consumed from topic {Topic}", topic);
         }
     }
 }
